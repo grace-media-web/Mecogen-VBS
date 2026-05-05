@@ -133,23 +133,49 @@ const VillageTracker = () => {
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'pray' | 'volunteer' | 'support'>('pray');
-  const [formData, setFormData] = useState({ name: '', mobile: '', place: '' });
+  const [formData, setFormData] = useState({ name: '', mobile: '', place: '', amount: '100' });
   const [showQR, setShowQR] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const handleDonation = (e: FormEvent) => {
+  // Paste your Google Apps Script Web App URL here
+  const GOOGLE_SCRIPT_URL = ""; 
+
+  const handleDonation = async (e: FormEvent) => {
     e.preventDefault();
-    if (formData.name.length < 2 || !/^[6-9]\d{9}$/.test(formData.mobile) || formData.place.length < 2) {
-      alert("தயவு செய்து சரியான விவரங்களை உள்ளிடவும் (Please enter valid details)");
+    if (formData.name.length < 2 || !/^[6-9]\d{9}$/.test(formData.mobile) || formData.place.length < 2 || !formData.amount) {
+      alert("தயவு செய்து சரியான விவரங்களை உள்ளிடவும் (Please enter valid details and amount)");
       return;
     }
+    
+    if (GOOGLE_SCRIPT_URL) {
+      try {
+        setIsSubmitting(true);
+        const submitData = new FormData();
+        submitData.append('Name', formData.name);
+        submitData.append('Mobile', formData.mobile);
+        submitData.append('Place', formData.place);
+        submitData.append('Amount', formData.amount);
+
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          body: submitData,
+          mode: 'no-cors'
+        });
+      } catch (error) {
+        console.error("Error submitting form to sheet", error);
+      } finally {
+        setIsSubmitting(false);
+      }
+    }
+
     setShowQR(true);
 
     if (window.innerWidth < 768) {
       const isAndroid = /android/i.test(navigator.userAgent);
       const upiUrl = isAndroid 
-        ? 'intent://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR#Intent;scheme=upi;end;'
-        : 'upi://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR';
+        ? `intent://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR&am=${formData.amount}#Intent;scheme=upi;end;`
+        : `upi://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR&am=${formData.amount}`;
       
       const link = document.createElement('a');
       link.href = upiUrl;
@@ -160,7 +186,7 @@ export default function App() {
   };
 
   const sendWhatsApp = () => {
-    const msg = `*MECOGEN VBS 2026*%0A*Name:* ${formData.name}%0A*Mobile:* ${formData.mobile}%0A*Place:* ${formData.place}%0A%0ASupport confirmed. Sending screenshot.`;
+    const msg = `*MECOGEN VBS 2026*%0A*Name:* ${formData.name}%0A*Mobile:* ${formData.mobile}%0A*Place:* ${formData.place}%0A*Amount:* ₹${formData.amount}%0A%0ASupport confirmed. Sending screenshot.`;
     window.open(`https://wa.me/919443289026?text=${msg}`, '_blank');
   };
 
@@ -184,9 +210,9 @@ export default function App() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-5xl sm:text-6xl lg:text-[100px] leading-[1.1] lg:leading-[0.85] font-serif font-black italic tracking-tighter"
+                className="text-5xl sm:text-7xl lg:text-[100px] leading-tight lg:leading-[0.85] font-serif font-black italic tracking-tighter"
               >
-                வா இயேசுவிடம் <span className="block text-editorial-accent not-italic">வா.</span>
+                வா இயேசுவிடம் <span className="block text-editorial-accent mt-2 lg:mt-0 not-italic">வா.</span>
               </motion.h1>
               <motion.p 
                 initial={{ opacity: 0 }}
@@ -202,7 +228,7 @@ export default function App() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="grid grid-cols-3 gap-4 py-8 mt-12 border-t border-b border-editorial-text/10"
+              className="grid grid-cols-1 sm:grid-cols-3 gap-4 py-8 mt-12 border-t border-b border-editorial-text/10"
             >
               <div className="flex flex-col">
                 <span className="text-5xl font-black font-serif">27k</span>
@@ -222,7 +248,7 @@ export default function App() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
-              className="flex gap-4 mt-8"
+              className="flex flex-col sm:flex-row gap-4 mt-8"
             >
               <a href="#donate" className="flex-1 bg-editorial-text text-white p-6 flex flex-col justify-between cursor-pointer group transition-all hover:bg-neutral-800">
                 <span className="text-[10px] font-bold uppercase tracking-widest opacity-70">Support the Mission</span>
@@ -288,7 +314,7 @@ export default function App() {
                 key={i} 
                 src={`/images/photo${i}.png`} 
                 alt={`VBS Photo ${i}`} 
-                className="w-[450px] aspect-[4/3] object-cover flex-shrink-0 snap-center border border-editorial-text/10"
+                className="w-[85vw] sm:w-[450px] aspect-[4/3] object-cover flex-shrink-0 snap-center border border-editorial-text/10"
                 onError={(e) => (e.currentTarget.src = `https://placehold.co/800x600?text=VBS+Exhibit+${i}`)}
               />
             ))}
@@ -305,24 +331,24 @@ export default function App() {
           <SectionHeader title="Get Involved" subtitle="Participation in the Divine Calling" />
           
           <div className="max-w-4xl mx-auto flex flex-col md:flex-row border border-editorial-text/10">
-            <div className="md:w-1/3 flex flex-col border-r border-editorial-text/10 bg-editorial-panel/30">
+            <div className="md:w-1/3 flex flex-row overflow-x-auto md:flex-col border-b md:border-b-0 md:border-r border-editorial-text/10 bg-editorial-panel/30">
               <button 
                 onClick={() => setActiveTab('pray')}
-                className={`flex-1 p-8 text-left text-[10px] uppercase font-bold tracking-widest border-b border-editorial-text/10 transition-all ${activeTab === 'pray' ? 'bg-editorial-text text-white' : 'hover:bg-editorial-panel'}`}
+                className={`flex-1 min-w-[120px] p-6 md:p-8 text-center md:text-left text-[10px] uppercase font-bold tracking-widest border-r md:border-r-0 md:border-b border-editorial-text/10 transition-all ${activeTab === 'pray' ? 'bg-editorial-text text-white' : 'hover:bg-editorial-panel'}`}
               >
-                01. Pray (ஜெபிக்க)
+                01. Pray <br className="md:hidden"/>(ஜெபிக்க)
               </button>
               <button 
                 onClick={() => setActiveTab('volunteer')}
-                className={`flex-1 p-8 text-left text-[10px] uppercase font-bold tracking-widest border-b border-editorial-text/10 transition-all ${activeTab === 'volunteer' ? 'bg-editorial-text text-white' : 'hover:bg-editorial-panel'}`}
+                className={`flex-1 min-w-[120px] p-6 md:p-8 text-center md:text-left text-[10px] uppercase font-bold tracking-widest border-r md:border-r-0 md:border-b border-editorial-text/10 transition-all ${activeTab === 'volunteer' ? 'bg-editorial-text text-white' : 'hover:bg-editorial-panel'}`}
               >
-                02. Volunteer (தன்னார்வலராக)
+                02. Volunteer <br className="md:hidden"/>(தன்னார்வலராக)
               </button>
               <button 
                 onClick={() => setActiveTab('support')}
-                className={`flex-1 p-8 text-left text-[10px] uppercase font-bold tracking-widest transition-all ${activeTab === 'support' ? 'bg-editorial-text text-white' : 'hover:bg-editorial-panel'}`}
+                className={`flex-1 min-w-[120px] p-6 md:p-8 text-center md:text-left text-[10px] uppercase font-bold tracking-widest transition-all ${activeTab === 'support' ? 'bg-editorial-text text-white' : 'hover:bg-editorial-panel'}`}
               >
-                03. Support (தாங்க)
+                03. Support <br className="md:hidden"/>(தாங்க)
               </button>
             </div>
 
@@ -408,7 +434,36 @@ export default function App() {
               <p className="text-[10px] uppercase font-bold tracking-[0.3em] opacity-40 mb-12">Donation Registry</p>
               
               <form onSubmit={handleDonation} className="space-y-8">
-                <div className="space-y-1">
+                <div className="space-y-4 mb-4">
+                  <label className="text-[9px] uppercase font-bold tracking-widest opacity-60">Donation Purpose</label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <label className={`block border p-4 cursor-pointer transition-colors ${formData.amount === '100' ? 'border-editorial-accent bg-editorial-accent/10' : 'border-editorial-text/20 hover:border-editorial-accent/50'}`}>
+                      <input type="radio" name="amount" value="100" checked={formData.amount === '100'} onChange={(e) => setFormData({...formData, amount: e.target.value})} className="hidden" />
+                      <div className="text-[9px] uppercase tracking-widest opacity-50 mb-1">1 Child / ஒரு குட்டி</div>
+                      <div className="text-xl font-serif font-black italic text-editorial-accent">₹ 100</div>
+                    </label>
+                    <label className={`block border p-4 cursor-pointer transition-colors ${formData.amount === '5000' ? 'border-editorial-accent bg-editorial-accent/10' : 'border-editorial-text/20 hover:border-editorial-accent/50'}`}>
+                      <input type="radio" name="amount" value="5000" checked={formData.amount === '5000'} onChange={(e) => setFormData({...formData, amount: e.target.value})} className="hidden" />
+                      <div className="text-[9px] uppercase tracking-widest opacity-50 mb-1">1 Village / ஒரு கிராமம்</div>
+                      <div className="text-xl font-serif font-black italic text-editorial-accent">₹ 5,000</div>
+                    </label>
+                  </div>
+                  <div className="pt-2">
+                    <label className="text-[9px] uppercase font-bold tracking-widest opacity-60 block mb-2">Or enter any custom amount</label>
+                    <div className="flex items-center gap-2 border-b border-editorial-text/20 pb-2 focus-within:border-editorial-accent transition-colors">
+                      <span className="font-serif italic text-lg opacity-60">₹</span>
+                      <input 
+                        type="number" 
+                        value={formData.amount}
+                        onChange={(e) => setFormData({...formData, amount: e.target.value})}
+                        className="w-full bg-transparent outline-none font-serif text-lg italic transition-colors"
+                        placeholder="Enter amount"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-1 mt-8">
                   <label className="text-[9px] uppercase font-bold tracking-widest opacity-60">Full Name</label>
                   <input 
                     type="text" 
@@ -439,8 +494,12 @@ export default function App() {
                     required
                   />
                 </div>
-                <button type="submit" className="w-full bg-editorial-text text-white py-5 font-bold text-xs uppercase tracking-widest hover:bg-neutral-800 transition-all flex items-center justify-center gap-3">
-                  Next Step →
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="w-full bg-editorial-text text-white py-5 font-bold text-xs uppercase tracking-widest hover:bg-neutral-800 transition-all flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? 'Submitting...' : 'Next Step →'}
                 </button>
               </form>
             </div>
@@ -463,15 +522,15 @@ export default function App() {
                   >
                     <div className="bg-white p-4 inline-block mb-6 shadow-xl border border-editorial-text/5">
                        <img 
-                          src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent('upi://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR')}`}
+                          src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(`upi://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR&am=${formData.amount}`)}`}
                           alt="Payment QR"
                           className="w-48 h-48"
                         />
                     </div>
-                    <p className="hidden md:block text-[9px] uppercase font-bold tracking-widest opacity-60 mb-8 max-w-xs mx-auto">Scan with GPay, PhonePe, or any UPI terminal</p>
-                    <p className="md:hidden text-[9px] uppercase font-bold tracking-widest opacity-60 mb-4 max-w-xs mx-auto">Pay using any UPI App</p>
+                    <p className="hidden md:block text-[9px] uppercase font-bold tracking-widest opacity-60 mb-8 max-w-xs mx-auto">Scan with GPay, PhonePe, or any UPI terminal to pay ₹{formData.amount}</p>
+                    <p className="md:hidden text-[9px] uppercase font-bold tracking-widest opacity-60 mb-4 max-w-xs mx-auto">Pay ₹{formData.amount} using any UPI App</p>
                     <a 
-                      href={/android/i.test(navigator.userAgent) ? 'intent://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR#Intent;scheme=upi;end;' : 'upi://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR'} 
+                      href={/android/i.test(navigator.userAgent) ? `intent://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR&am=${formData.amount}#Intent;scheme=upi;end;` : `upi://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR&am=${formData.amount}`} 
                       className="md:hidden inline-block bg-editorial-text text-white px-6 py-3 font-bold text-[10px] uppercase tracking-widest hover:bg-neutral-800 transition-all mb-8 shadow-md"
                     >
                       Open UPI App
