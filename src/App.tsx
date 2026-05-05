@@ -146,7 +146,16 @@ export default function App() {
     setShowQR(true);
 
     if (window.innerWidth < 768) {
-      window.location.href = `upi://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR`;
+      const isAndroid = /android/i.test(navigator.userAgent);
+      const upiUrl = isAndroid 
+        ? 'intent://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR#Intent;scheme=upi;end;'
+        : 'upi://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR';
+      
+      const link = document.createElement('a');
+      link.href = upiUrl;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   };
 
@@ -175,7 +184,7 @@ export default function App() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-7xl md:text-[100px] leading-[0.85] font-serif font-black italic tracking-tighter"
+                className="text-5xl sm:text-6xl lg:text-[100px] leading-[1.1] lg:leading-[0.85] font-serif font-black italic tracking-tighter"
               >
                 வா இயேசுவிடம் <span className="block text-editorial-accent not-italic">வா.</span>
               </motion.h1>
@@ -462,7 +471,7 @@ export default function App() {
                     <p className="hidden md:block text-[9px] uppercase font-bold tracking-widest opacity-60 mb-8 max-w-xs mx-auto">Scan with GPay, PhonePe, or any UPI terminal</p>
                     <p className="md:hidden text-[9px] uppercase font-bold tracking-widest opacity-60 mb-4 max-w-xs mx-auto">Pay using any UPI App</p>
                     <a 
-                      href="upi://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR" 
+                      href={/android/i.test(navigator.userAgent) ? 'intent://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR#Intent;scheme=upi;end;' : 'upi://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR'} 
                       className="md:hidden inline-block bg-editorial-text text-white px-6 py-3 font-bold text-[10px] uppercase tracking-widest hover:bg-neutral-800 transition-all mb-8 shadow-md"
                     >
                       Open UPI App
