@@ -20,7 +20,8 @@ import {
   Navigation,
   Globe,
   QrCode,
-  DollarSign
+  DollarSign,
+  ArrowUp
 } from 'lucide-react';
 import { VBS_DATA, Region } from './constants';
 
@@ -216,7 +217,32 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<'pray' | 'volunteer' | 'support'>('pray');
   const [formData, setFormData] = useState({ name: '', mobile: '', place: '' });
   const [showQR, setShowQR] = useState(false);
+  const [donationAmount, setDonationAmount] = useState<string>('100');
+  const [donationType, setDonationType] = useState<'child' | 'village' | 'custom'>('child');
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 500);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleAmountSelect = (type: 'child' | 'village') => {
+    setDonationType(type);
+    setDonationAmount(type === 'child' ? '100' : '5000');
+  };
+
+  const handleCustomAmount = (val: string) => {
+    setDonationType('custom');
+    setDonationAmount(val.replace(/\D/g, ''));
+  };
 
   const handleDonation = (e: FormEvent) => {
     e.preventDefault();
@@ -224,12 +250,16 @@ export default function App() {
       alert("தயவு செய்து சரியான விவரங்களை உள்ளிடவும் (Please enter valid details)");
       return;
     }
+    if (!donationAmount || Number(donationAmount) <= 0) {
+      alert("Please enter a valid amount.");
+      return;
+    }
     setShowQR(true);
   };
 
   const sendWhatsApp = () => {
     const UPI_ID = "graceministriesindia@okhdfcbank";
-    const msg = `*MECOGEN VBS 2026*%0A*Name:* ${formData.name}%0A*Mobile:* ${formData.mobile}%0A*Place:* ${formData.place}%0A%0ASupport confirmed. Sending screenshot.`;
+    const msg = `*MECOGEN VBS 2026*%0A*Name:* ${formData.name}%0A*Mobile:* ${formData.mobile}%0A*Place:* ${formData.place}%0A*Amount:* ₹${donationAmount}%0A%0ASupport confirmed. Sending screenshot.`;
     window.open(`https://wa.me/919443289026?text=${msg}`, '_blank');
   };
 
@@ -351,9 +381,13 @@ export default function App() {
             ref={scrollContainerRef}
             className="flex gap-6 overflow-x-auto pb-10 scrollbar-hide snap-x"
           >
-            {[1, 2, 3, 4, 5].map((i) => (
-              <img 
+            {[1, 2, 3, 4, 5].map((i, index) => (
+              <motion.img 
                 key={i} 
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
                 src={`/images/photo${i}.png`} 
                 alt={`VBS Photo ${i}`} 
                 className="w-80 h-56 object-cover rounded-2xl flex-shrink-0 snap-center shadow-2xl border-4 border-white/10"
@@ -482,70 +516,136 @@ export default function App() {
         <div className="container mx-auto px-6">
           <SectionHeader title="Support the Mission" subtitle="உங்கள் காணிக்கை ஒரு தலைமுறையை மாற்றும்" />
           
-          <div className="max-w-2xl mx-auto bg-white rounded-3xl p-8 md:p-12 shadow-2xl border border-gray-100">
-             <form onSubmit={handleDonation} className="space-y-6">
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">பெயர் (Full Name)</label>
-                  <input 
-                    type="text" 
-                    value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value.replace(/[0-9]/g, '')})}
-                    placeholder="Enter your name" 
-                    className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all outline-none"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">மொபைல் (Mobile)</label>
-                  <input 
-                    type="tel" 
-                    value={formData.mobile}
-                    onChange={(e) => setFormData({...formData, mobile: e.target.value})}
-                    placeholder="10 digit mobile number" 
-                    maxLength={10}
-                    className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all outline-none"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">ஊர் (Place)</label>
-                  <input 
-                    type="text" 
-                    value={formData.place}
-                    onChange={(e) => setFormData({...formData, place: e.target.value})}
-                    placeholder="City or Village" 
-                    className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all outline-none"
-                    required
-                  />
-                </div>
-                <button type="submit" className="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-xl hover:bg-blue-700 shadow-xl transition-all flex items-center justify-center gap-3">
-                  <DollarSign size={24} /> Continue to Support
-                </button>
-             </form>
-
-             {showQR && (
-               <motion.div 
-                 initial={{ opacity: 0, y: 20 }}
-                 animate={{ opacity: 1, y: 0 }}
-                 className="mt-12 text-center p-8 border-t border-gray-100"
-               >
-                  <h4 className="text-xl font-bold mb-6 text-gray-800">Scan QR to pay via UPI</h4>
-                  <div className="inline-block p-4 bg-white border-2 border-gray-100 rounded-3xl shadow-inner mb-6">
-                    <img 
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent('upi://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR')}`}
-                      alt="Payment QR"
-                      className="w-64 h-64 mx-auto"
-                    />
+          <div className="max-w-6xl mx-auto grid lg:grid-cols-2 bg-white rounded-[2rem] overflow-hidden shadow-2xl border border-gray-100 min-h-[600px]">
+             
+             {/* Left Column: Form & Amount */}
+             <div className="p-8 md:p-12 lg:p-16 flex flex-col justify-center">
+                <h3 className="text-sm font-bold text-gray-400 mb-6 uppercase tracking-widest">Donation Registry</h3>
+                
+                <div className="space-y-8">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 mb-3 uppercase tracking-wide">Donation Purpose</label>
+                    <div className="grid grid-cols-2 gap-4">
+                      <button 
+                        type="button"
+                        onClick={() => handleAmountSelect('child')}
+                        className={`p-4 md:p-6 text-left border-2 rounded-2xl transition-all ${donationType === 'child' ? 'border-yellow-400 bg-yellow-50/50 shadow-md' : 'border-gray-100 hover:border-gray-200 bg-white'}`}
+                      >
+                        <p className="text-gray-500 text-xs font-bold uppercase tracking-wide mb-2">1 Child / ஒரு குட்டி</p>
+                        <h4 className="text-2xl md:text-3xl font-black text-yellow-500">₹ 100</h4>
+                      </button>
+                      <button 
+                        type="button"
+                        onClick={() => handleAmountSelect('village')}
+                        className={`p-4 md:p-6 text-left border-2 rounded-2xl transition-all ${donationType === 'village' ? 'border-yellow-400 bg-yellow-50/50 shadow-md' : 'border-gray-100 hover:border-gray-200 bg-white'}`}
+                      >
+                        <p className="text-gray-500 text-xs font-bold uppercase tracking-wide mb-2">1 Village / ஒரு கிராமம்</p>
+                        <h4 className="text-2xl md:text-3xl font-black text-yellow-500">₹ 5,000</h4>
+                      </button>
+                    </div>
                   </div>
-                  <p className="text-gray-500 mb-8 font-medium">Any UPI App supported (GPay, PhonePe, etc.)</p>
-                  <button 
-                    onClick={sendWhatsApp}
-                    className="w-full bg-green-500 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-green-600 transition-all shadow-lg"
-                  >
-                    Confirm via WhatsApp 📱
-                  </button>
-               </motion.div>
-             )}
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 mb-3 uppercase tracking-wide">Or Enter Custom Amount</label>
+                    <div className="relative">
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 text-xl font-bold text-gray-400">₹</span>
+                      <input 
+                        type="text" 
+                        value={donationAmount}
+                        onChange={(e) => handleCustomAmount(e.target.value)}
+                        placeholder="100" 
+                        className="w-full pl-8 py-3 bg-transparent border-b-2 border-gray-100 focus:border-blue-500 transition-colors outline-none text-2xl font-bold text-gray-800 placeholder-gray-300"
+                      />
+                    </div>
+                  </div>
+
+                  <form onSubmit={handleDonation} className="space-y-8 pt-4">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">Full Name</label>
+                      <input 
+                        type="text" 
+                        value={formData.name}
+                        onChange={(e) => setFormData({...formData, name: e.target.value.replace(/[0-9]/g, '')})}
+                        className="w-full py-3 bg-transparent border-b-2 border-gray-100 focus:border-blue-500 transition-colors outline-none text-lg font-medium text-gray-800"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">Mobile Contact</label>
+                      <input 
+                        type="tel" 
+                        value={formData.mobile}
+                        onChange={(e) => setFormData({...formData, mobile: e.target.value})}
+                        maxLength={10}
+                        className="w-full py-3 bg-transparent border-b-2 border-gray-100 focus:border-blue-500 transition-colors outline-none text-lg font-medium tracking-wider text-gray-800"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">Place of Birth/Residence</label>
+                      <input 
+                        type="text" 
+                        value={formData.place}
+                        onChange={(e) => setFormData({...formData, place: e.target.value})}
+                        className="w-full py-3 bg-transparent border-b-2 border-gray-100 focus:border-blue-500 transition-colors outline-none text-lg font-medium text-gray-800"
+                        required
+                      />
+                    </div>
+                    
+                    <button type="submit" className="bg-gray-900 text-white px-8 py-4 rounded-xl font-bold text-sm tracking-widest uppercase hover:bg-gray-800 transition-all flex items-center justify-center gap-2">
+                       Next Step &rarr;
+                    </button>
+                  </form>
+                </div>
+             </div>
+
+             {/* Right Column: QR Gateway */}
+             <div className="bg-[#f9f8f5] p-8 md:p-12 lg:p-16 flex flex-col items-center justify-center border-t lg:border-t-0 lg:border-l border-gray-200">
+                <AnimatePresence mode="wait">
+                  {!showQR ? (
+                    <motion.div 
+                      key="prompt"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0, transition: { duration: 0.2 } }}
+                      className="text-center px-6"
+                    >
+                      <p className="text-gray-500 italic text-xl font-serif">
+                        Please complete the form to generate your specialized UPI gateway.
+                      </p>
+                    </motion.div>
+                  ) : (
+                    <motion.div 
+                      key="qr"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="w-full max-w-sm flex flex-col items-center text-center"
+                    >
+                      <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-6">
+                        <QrCode size={32} />
+                      </div>
+                      <h4 className="text-2xl font-black mb-2 text-gray-900">Scan to Pay</h4>
+                      <p className="text-gray-500 font-medium mb-8">Amount: <span className="text-gray-900 font-bold">₹{parseInt(donationAmount).toLocaleString()}</span></p>
+                      
+                      <div className="p-4 bg-white border border-gray-200 rounded-3xl shadow-sm mb-8 w-full flex justify-center">
+                        <img 
+                          src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(`upi://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR&am=${donationAmount}`)}`}
+                          alt="Payment QR"
+                          className="w-56 h-56"
+                        />
+                      </div>
+                      
+                      <button 
+                        onClick={sendWhatsApp}
+                        className="w-full bg-[#25D366] text-white py-4 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-[#20ba5a] transition-all shadow-md"
+                      >
+                        Confirm via WhatsApp 📱
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+             </div>
+             
           </div>
         </div>
       </section>
@@ -607,6 +707,21 @@ export default function App() {
            </div>
         </div>
       </footer>
+
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 20 }}
+            onClick={scrollToTop}
+            className="fixed bottom-8 right-8 z-50 bg-blue-600 text-white p-4 rounded-full shadow-2xl hover:bg-yellow-400 hover:text-blue-900 transition-colors focus:outline-none"
+            aria-label="Scroll to top"
+          >
+            <ArrowUp size={24} strokeWidth={3} />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
