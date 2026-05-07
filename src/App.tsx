@@ -36,63 +36,144 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-editorial-bg shadow-sm py-4' : 'bg-transparent py-6'}`}>
-      <div className="container mx-auto px-6 flex justify-between items-end border-b border-editorial-text/10 pb-4">
-        <a href="#" className="flex items-baseline gap-3">
-          <span className={`font-black text-2xl tracking-tighter transition-colors ${isScrolled ? 'text-editorial-text' : 'text-white'}`}>
-            MECOGEN
-          </span>
-          <span className={`text-[10px] uppercase tracking-widest font-bold opacity-60 hidden sm:block ${isScrolled ? 'text-editorial-text' : 'text-white'}`}>
-            VBS Project 2026
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'}`}>
+      <div className="container mx-auto px-6 flex justify-between items-center">
+        <a href="#" className="flex items-center gap-3">
+          <img src="/images/logo.png" alt="Grace Ministries" className="h-10 w-auto" onError={(e) => (e.currentTarget.src = 'https://placehold.co/100x100?text=Logo')} />
+          <span className={`font-bold text-xl tracking-tight transition-colors ${isScrolled ? 'text-primary-800' : 'text-white'}`}>
+            MECOGEN VBS
           </span>
         </a>
-        <div className={`hidden md:flex gap-8 text-[10px] uppercase tracking-widest font-bold ${isScrolled ? 'text-editorial-text' : 'text-white/80'}`}>
-          <a href="#about" className="hover:text-editorial-accent transition-colors">Mission</a>
-          <a href="#vision" className="hover:text-editorial-accent transition-colors">Impact</a>
-          <a href="#villages" className="hover:text-editorial-accent transition-colors">Villages</a>
-          <a href="#donate" className="text-editorial-accent">Support Now</a>
+        <div className={`hidden md:flex gap-8 font-medium ${isScrolled ? 'text-gray-700' : 'text-white/90'}`}>
+          <a href="#about" className="hover:text-blue-500 transition-colors">About</a>
+          <a href="#vision" className="hover:text-blue-500 transition-colors">Vision</a>
+          <a href="#mission" className="hover:text-blue-500 transition-colors">Mission</a>
+          <a href="#involve" className="hover:text-blue-500 transition-colors">Involve</a>
+          <a href="#donate" className="hover:text-blue-500 transition-colors">Donate</a>
         </div>
+        <a href="#donate" className="bg-blue-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-700 transition-all transform hover:scale-105 shadow-lg">
+          Support Now
+        </a>
       </div>
     </nav>
   );
 };
 
 const SectionHeader = ({ title, subtitle, light = false }: { title: string; subtitle?: string; light?: boolean }) => (
-  <div className="mb-12">
-    <div className="flex items-center gap-4 mb-4">
-      <h2 className={`text-2xl md:text-3xl font-serif font-black italic ${light ? 'text-white' : 'text-editorial-text'}`}>{title}</h2>
-      <div className="h-px flex-1 bg-editorial-text/10 overflow-hidden">
-        <div className="h-full bg-editorial-accent w-16"></div>
-      </div>
-    </div>
-    {subtitle && <p className={`max-w-2xl text-[11px] uppercase tracking-[0.2em] font-bold ${light ? 'text-white/60' : 'text-editorial-text/60'}`}>{subtitle}</p>}
+  <div className="text-center mb-12">
+    <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${light ? 'text-white' : 'text-gray-900'}`}>{title}</h2>
+    <div className="w-16 h-1.5 bg-yellow-400 mx-auto rounded-full mb-4"></div>
+    {subtitle && <p className={`max-w-2xl mx-auto text-lg ${light ? 'text-white/80' : 'text-gray-600'}`}>{subtitle}</p>}
   </div>
 );
 
-const VillageTracker = () => {
+const MissionTracker = () => {
   const [expandedId, setExpandedId] = useState<number | null>(1);
 
+  let heldVillages = 0;
+  VBS_DATA.forEach((region) => {
+    region.fields.forEach((field) => {
+      field.villages.forEach((village) => {
+        if (village.status === 'held') heldVillages++;
+      });
+    });
+  });
+
+  const childrenGoal = 27000;
+  const villageGoal = 575;
+  const vbsGoal = 575;
+
+  const currentVillages = heldVillages || 35; // Default for display so bars have some fill if 0
+  const currentVBS = heldVillages || 35;
+  const currentChildren = (heldVillages || 35) * 45; 
+
+  const progressProps = (current: number, goal: number) => {
+     const pct = Math.max(1, Math.min(100, (current / goal) * 100));
+     return { current, goal, pct };
+  }
+
+  const childProgress = progressProps(currentChildren, childrenGoal);
+  const villageProgress = progressProps(currentVillages, villageGoal);
+  const vbsProgress = progressProps(currentVBS, vbsGoal);
+
   return (
-    <section id="villages" className="py-24 bg-editorial-panel border-y border-editorial-text/5">
+    <section id="mission" className="py-24 bg-gray-900 text-white">
       <div className="container mx-auto px-6">
-        <div className="flex justify-between items-center mb-12">
-          <h2 className="text-[11px] font-bold uppercase tracking-[0.2em]">Village Honor Roll 2026</h2>
-          <span className="h-px flex-1 bg-editorial-text/10 mx-4"></span>
-          <span className="text-[10px] font-mono opacity-50 uppercase tracking-widest">Master Registry</span>
+        <SectionHeader 
+          light
+          title="Reached Goal" 
+          subtitle="நமது இலக்கு மற்றும் நாம் கடந்து வந்த பாதை"
+        />
+        
+        <div className="max-w-4xl mx-auto space-y-8 mb-20 bg-gray-800 p-8 md:p-12 rounded-3xl border border-gray-700 shadow-2xl">
+           <div className="space-y-3">
+             <div className="flex justify-between text-sm md:text-base font-bold text-gray-200 mb-1">
+               <span className="flex items-center gap-2"><Users size={18} className="text-blue-400"/> Child Outreach Goal</span>
+               <span>{currentChildren.toLocaleString()} / {childrenGoal.toLocaleString()}</span>
+             </div>
+             <div className="w-full bg-gray-900 h-4 rounded-full overflow-hidden border border-gray-700">
+               <motion.div 
+                 initial={{ width: 0 }}
+                 whileInView={{ width: `${childProgress.pct}%` }}
+                 viewport={{ once: true }}
+                 transition={{ duration: 1.5, ease: "easeOut" }}
+                 className="bg-gradient-to-r from-blue-600 to-blue-400 h-full rounded-full" 
+               />
+             </div>
+           </div>
+
+           <div className="space-y-3">
+             <div className="flex justify-between text-sm md:text-base font-bold text-gray-200 mb-1">
+               <span className="flex items-center gap-2"><MapPin size={18} className="text-green-400"/> Villages Reached</span>
+               <span>{currentVillages.toLocaleString()} / {villageGoal.toLocaleString()}</span>
+             </div>
+             <div className="w-full bg-gray-900 h-4 rounded-full overflow-hidden border border-gray-700">
+               <motion.div 
+                 initial={{ width: 0 }}
+                 whileInView={{ width: `${villageProgress.pct}%` }}
+                 viewport={{ once: true }}
+                 transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
+                 className="bg-gradient-to-r from-green-600 to-green-400 h-full rounded-full" 
+               />
+             </div>
+           </div>
+
+           <div className="space-y-3">
+             <div className="flex justify-between text-sm md:text-base font-bold text-gray-200 mb-1">
+               <span className="flex items-center gap-2"><Heart size={18} className="text-yellow-400"/> VBS Completed</span>
+               <span>{currentVBS.toLocaleString()} / {vbsGoal.toLocaleString()}</span>
+             </div>
+             <div className="w-full bg-gray-900 h-4 rounded-full overflow-hidden border border-gray-700">
+               <motion.div 
+                 initial={{ width: 0 }}
+                 whileInView={{ width: `${vbsProgress.pct}%` }}
+                 viewport={{ once: true }}
+                 transition={{ duration: 1.5, ease: "easeOut", delay: 0.4 }}
+                 className="bg-gradient-to-r from-yellow-500 to-yellow-300 h-full rounded-full" 
+               />
+             </div>
+           </div>
         </div>
         
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
+        <div className="text-center mb-10">
+          <h3 className="text-2xl font-bold mb-3 text-white">நமது கிராம ஊழியங்கள் (Our Village Missions)</h3>
+          <p className="text-gray-400 mb-8">தமிழகம் முழுவதும் நடைபெற்று வரும் VBS பணித்தளங்கள்</p>
+        </div>
+
+        <div className="max-w-4xl mx-auto space-y-4 text-gray-900">
           {VBS_DATA.map((region) => (
-            <div key={region.id} className="border-b border-editorial-text/10 pb-8 h-fit">
+            <div key={region.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
               <button 
                 onClick={() => setExpandedId(expandedId === region.id ? null : region.id)}
-                className="w-full flex justify-between items-baseline mb-4 text-left group"
+                className="w-full px-6 py-5 flex justify-between items-center text-left hover:bg-gray-50 transition-colors"
               >
-                <div className="flex items-baseline gap-4">
-                  <span className="text-xs font-mono opacity-40">{region.id.toString().padStart(2, '0')}</span>
-                  <h3 className="font-serif font-black text-xl italic group-hover:text-editorial-accent transition-colors">{region.name}</h3>
+                <div className="flex items-center gap-4">
+                  <div className="bg-blue-100 text-blue-600 p-2 rounded-lg">
+                    <Navigation size={20} />
+                  </div>
+                  <h3 className="font-bold text-lg text-gray-800">{region.name}</h3>
                 </div>
-                <span className="text-xs font-mono opacity-40">{expandedId === region.id ? '[ - ]' : '[ + ]'}</span>
+                {expandedId === region.id ? <ChevronDown /> : <ChevronRight />}
               </button>
               
               <AnimatePresence>
@@ -103,17 +184,17 @@ const VillageTracker = () => {
                     exit={{ height: 0, opacity: 0 }}
                     className="overflow-hidden"
                   >
-                    <div className="space-y-6 pl-8">
+                    <div className="px-6 pb-6 pt-2 space-y-6">
                       {region.fields.map((field, idx) => (
-                        <div key={idx} className="space-y-2">
-                          <h4 className="text-[9px] font-black uppercase tracking-widest text-editorial-accent flex items-center gap-2">
-                             {field.name}
+                        <div key={idx} className="bg-blue-50/50 rounded-xl p-4">
+                          <h4 className="font-bold text-blue-800 mb-3 flex items-center gap-2">
+                             <MapPin size={16} /> {field.name}
                           </h4>
-                          <div className="grid grid-cols-1 gap-1">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             {field.villages.map((village, vIdx) => (
-                              <div key={vIdx} className="flex justify-between items-center text-[11px] font-medium border-b border-editorial-text/5 pb-1">
-                                <span className={village.status === 'held' ? 'text-editorial-text' : 'text-editorial-text/40'}>{village.name}</span>
-                                {village.status === 'held' && <span className="text-[9px] uppercase tracking-tighter text-green-600 font-bold">Verified</span>}
+                              <div key={vIdx} className="flex items-center gap-2 text-gray-700 bg-white p-2 rounded-lg border border-blue-100/50">
+                                <CheckCircle2 size={14} className={village.status === 'held' ? 'text-green-500' : 'text-orange-400'} />
+                                <span className="text-sm font-medium">{village.name}</span>
                               </div>
                             ))}
                           </div>
@@ -133,260 +214,234 @@ const VillageTracker = () => {
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'pray' | 'volunteer' | 'support'>('pray');
-  const [formData, setFormData] = useState({ name: '', mobile: '', place: '', amount: '100' });
+  const [formData, setFormData] = useState({ name: '', mobile: '', place: '' });
   const [showQR, setShowQR] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Paste your Google Apps Script Web App URL here
-  const GOOGLE_SCRIPT_URL = ""; 
-
-  const handleDonation = async (e: FormEvent) => {
+  const handleDonation = (e: FormEvent) => {
     e.preventDefault();
-    if (formData.name.length < 2 || !/^[6-9]\d{9}$/.test(formData.mobile) || formData.place.length < 2 || !formData.amount) {
-      alert("தயவு செய்து சரியான விவரங்களை உள்ளிடவும் (Please enter valid details and amount)");
+    if (formData.name.length < 2 || !/^[6-9]\d{9}$/.test(formData.mobile) || formData.place.length < 2) {
+      alert("தயவு செய்து சரியான விவரங்களை உள்ளிடவும் (Please enter valid details)");
       return;
     }
-    
-    if (GOOGLE_SCRIPT_URL) {
-      try {
-        setIsSubmitting(true);
-        const submitData = new FormData();
-        submitData.append('Name', formData.name);
-        submitData.append('Mobile', formData.mobile);
-        submitData.append('Place', formData.place);
-        submitData.append('Amount', formData.amount);
-
-        await fetch(GOOGLE_SCRIPT_URL, {
-          method: 'POST',
-          body: submitData,
-          mode: 'no-cors'
-        });
-      } catch (error) {
-        console.error("Error submitting form to sheet", error);
-      } finally {
-        setIsSubmitting(false);
-      }
-    }
-
     setShowQR(true);
-
-    if (window.innerWidth < 768) {
-      const isAndroid = /android/i.test(navigator.userAgent);
-      const upiUrl = isAndroid 
-        ? `intent://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR&am=${formData.amount}#Intent;scheme=upi;end;`
-        : `upi://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR&am=${formData.amount}`;
-      
-      const link = document.createElement('a');
-      link.href = upiUrl;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
   };
 
   const sendWhatsApp = () => {
-    const msg = `*MECOGEN VBS 2026*%0A*Name:* ${formData.name}%0A*Mobile:* ${formData.mobile}%0A*Place:* ${formData.place}%0A*Amount:* ₹${formData.amount}%0A%0ASupport confirmed. Sending screenshot.`;
+    const UPI_ID = "graceministriesindia@okhdfcbank";
+    const msg = `*MECOGEN VBS 2026*%0A*Name:* ${formData.name}%0A*Mobile:* ${formData.mobile}%0A*Place:* ${formData.place}%0A%0ASupport confirmed. Sending screenshot.`;
     window.open(`https://wa.me/919443289026?text=${msg}`, '_blank');
   };
 
   return (
-    <div className="min-h-screen bg-editorial-bg font-sans text-editorial-text selection:bg-editorial-accent/20">
+    <div className="min-h-screen bg-white font-sans text-gray-900 selection:bg-blue-100">
       <Navbar />
 
       {/* Hero Section */}
-      <header className="relative min-h-screen flex items-center pt-20 overflow-hidden">
-        <div className="container mx-auto px-6 grid grid-cols-12 gap-12 items-center">
-          <div className="col-span-12 lg:col-span-7 flex flex-col justify-center">
-            <div className="space-y-6">
-              <motion.div 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="inline-block bg-editorial-text text-white px-3 py-1 text-[10px] font-bold uppercase tracking-widest mb-4"
-              >
-                Grace Ministries Presents
-              </motion.div>
-              <motion.h1 
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="text-5xl sm:text-7xl lg:text-[100px] leading-tight lg:leading-[0.85] font-serif font-black italic tracking-tighter"
-              >
-                வா இயேசுவிடம் <span className="block text-editorial-accent mt-2 lg:mt-0 not-italic">வா.</span>
-              </motion.h1>
-              <motion.p 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="text-xl leading-relaxed max-w-lg font-serif opacity-80"
-              >
-                MECOGEN is a movement reaching the coming generation in unreached villages. Through VBS, we guide children toward the path of salvation.
-              </motion.p>
-            </div>
-
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="grid grid-cols-1 sm:grid-cols-3 gap-4 py-8 mt-12 border-t border-b border-editorial-text/10"
-            >
-              <div className="flex flex-col">
-                <span className="text-5xl font-black font-serif">27k</span>
-                <span className="text-[9px] uppercase tracking-wider font-bold opacity-60">Children Reached</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-5xl font-black font-serif">575</span>
-                <span className="text-[9px] uppercase tracking-wider font-bold opacity-60">Villages Impacted</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-5xl font-black font-serif">11</span>
-                <span className="text-[9px] uppercase tracking-wider font-bold opacity-60">Districts Covered</span>
-              </div>
-            </motion.div>
-
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              className="flex flex-col sm:flex-row gap-4 mt-8"
-            >
-              <a href="#donate" className="flex-1 bg-editorial-text text-white p-6 flex flex-col justify-between cursor-pointer group transition-all hover:bg-neutral-800">
-                <span className="text-[10px] font-bold uppercase tracking-widest opacity-70">Support the Mission</span>
-                <div className="flex justify-between items-end mt-4">
-                  <span className="text-xl font-bold italic font-serif">Donate ₹5,000</span>
-                  <span className="text-2xl group-hover:translate-x-1 transition-transform">→</span>
-                </div>
-              </a>
-              <a href="#involve" className="flex-1 border-2 border-editorial-text p-6 flex flex-col justify-between cursor-pointer group transition-all hover:bg-editorial-panel">
-                <span className="text-[10px] font-bold uppercase tracking-widest opacity-70">Participation</span>
-                <div className="flex justify-between items-end mt-4">
-                  <span className="text-xl font-bold italic font-serif">Volunteer Now</span>
-                  <span className="text-2xl group-hover:translate-x-1 transition-transform">→</span>
-                </div>
-              </a>
-            </motion.div>
-          </div>
-          
-          <div className="hidden lg:block col-span-5 relative">
-            <div className="absolute inset-0 bg-editorial-panel rounded-full blur-3xl opacity-50 -z-10" />
-            <motion.img 
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.5, duration: 1 }}
-              src="/images/photo1.png" 
-              className="w-full h-auto rounded-3xl object-cover shadow-[0_40px_100px_-20px_rgba(0,0,0,0.2)] border border-editorial-text/5 transform rotate-2"
-              onError={(e) => (e.currentTarget.src = 'https://images.unsplash.com/photo-1540317580114-ed684c0cff02?auto=format&fit=crop&q=80&w=1200')}
-            />
-          </div>
+      <header className="relative h-screen flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-blue-900/80 z-10" />
+          <img 
+            src="/images/hero-bg.png" 
+            alt="Hero Background" 
+            className="w-full h-full object-cover" 
+            onError={(e) => (e.currentTarget.src = 'https://images.unsplash.com/photo-1540317580114-ed684c0cff02?auto=format&fit=crop&q=80&w=2000')}
+          />
+        </div>
+        
+        <div className="container mx-auto px-6 relative z-20 text-center text-white">
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="uppercase tracking-[0.3em] font-black text-blue-300 md:text-xl mb-6"
+          >
+            Meeting Coming Generation
+          </motion.p>
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-6xl md:text-9xl font-black mb-8 leading-tight drop-shadow-2xl"
+          >
+            VBS <span className="text-yellow-400">2026</span>
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-4xl md:text-6xl font-bold text-yellow-400 mb-12 drop-shadow-lg"
+          >
+            வா இயேசுவிடம் வா
+          </motion.p>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.6 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          >
+            <a href="#about" className="bg-white text-blue-900 px-8 py-4 rounded-full font-bold text-lg hover:bg-yellow-400 hover:text-blue-900 transition-all shadow-xl inline-flex items-center gap-2">
+              Learn More <ChevronRight size={20} />
+            </a>
+            <a href="#mission" className="bg-blue-600/30 backdrop-blur-md border border-white/30 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white/20 transition-all shadow-xl inline-flex items-center gap-2">
+              Mission Goals
+            </a>
+          </motion.div>
         </div>
       </header>
 
       {/* About Section */}
-      <section id="about" className="py-32">
+      <section id="about" className="py-24">
         <div className="container mx-auto px-6">
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-16 items-start">
-             <div className="md:w-1/3">
-                <h2 className="text-[60px] font-serif font-black italic leading-none text-editorial-text mb-6">ஆலயம் இல்லாக் கிராமங்கள்.</h2>
-                <div className="w-16 h-1.5 bg-editorial-accent mb-8"></div>
-                <p className="text-[10px] uppercase font-bold tracking-[0.3em] opacity-40">Mecogen Story</p>
-             </div>
-             <div className="md:w-2/3 space-y-8 text-xl font-serif leading-relaxed italic opacity-90">
-                <p>
-                  <strong className="not-italic font-sans text-editorial-accent text-[11px] uppercase tracking-widest block mb-4">Mission Statement</strong>
-                  MECOGEN (Meeting Coming Generation) கிருபையின் ஊழியங்களின் இளைஞர் இணை இயக்கமான ஆத்தும ஆதாயகர் இளைஞர் இயக்கத்தின் மூலமாக ஆலயம் இல்லா கிராமங்களில் உள்ள சிறுவர்களை சந்திக்கும் நடைபெறும் VBS நற்செய்தி பணி.
-                </p>
-                <p>
-                  ஆலயம் இல்லா கிராமங்களில் VBS மூலமாக சந்திக்கப்படுகிற சிறுவர்களை இரட்சிப்பின் பாதையில் வழி நடத்தி அவர்கள் மூலமாக கிராமங்களை சந்தித்து தேவனுக்காய் ஆலயங்களை எழுப்புவதே எங்களின் உன்னத நோக்கம் ஆகும்.
-                </p>
-             </div>
+          <SectionHeader 
+            title="About MECOGEN" 
+            subtitle="மீக்கோஜன் - எதிர்காலத் தலைமுறையை சந்திப்போம்"
+          />
+          <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
+              <p>
+                <strong className="text-blue-600 block text-2xl mb-2">MECOGEN (Meeting Coming Generation)</strong> 
+                கிருபையின் ஊழியங்களின் இளைஞர் இணை இயக்கமான ஆத்தும ஆதாயகர் இளைஞர் இயக்கத்தின் (Young soul winners mission) மூலமாக ஆலயம் இல்லா கிராமங்களில் உள்ள சிறுவர்களை சந்திக்கும் நடைபெறும் VBS நற்செய்தி பணி.
+              </p>
+              <p>
+                ஆலயம் இல்லா கிராமங்களில் VBS மூலமாக சந்திக்கப்படுகிற சிறுவர்களை இரட்சிப்பின் பாதையில் வழி நடத்தி அவர்கள் மூலமாக கிராமங்களை சந்தித்து தேவனுக்காய் ஆலயங்களை எழுப்புவதே எங்களின் உன்னத நோக்கம் ஆகும்.
+              </p>
+            </div>
+            <div className="relative group">
+              <div className="absolute inset-0 bg-blue-600 rounded-3xl rotate-3 group-hover:rotate-0 transition-transform duration-500 shadow-xl" />
+              <img 
+                src="https://images.unsplash.com/photo-1540317580114-ed684c0cff02?auto=format&fit=crop&q=80&w=800" 
+                alt="VBS Training" 
+                className="relative z-10 w-full h-auto rounded-3xl object-cover shadow-2xl transition-transform duration-500 hover:-translate-y-2"
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Vision Photo Carousel */}
-      <section id="vision" className="pb-32">
+      {/* Vision Section */}
+      <section id="vision" className="py-24 bg-blue-900 text-white overflow-hidden">
         <div className="container mx-auto px-6">
+          <SectionHeader light title="Our Vision" subtitle="நமது இலக்கு மற்றும் தரிசனம்" />
+          
+          <div className="grid md:grid-cols-3 gap-8 mb-16">
+            <div className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/10">
+              <div className="bg-yellow-400 text-blue-900 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+                <Users size={24} />
+              </div>
+              <h3 className="text-2xl font-bold mb-2">27,000+</h3>
+              <p className="text-white/70">சிறுவர்களை சந்திப்பதே எங்களது நோக்கம்</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/10">
+              <div className="bg-yellow-400 text-blue-900 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+                <Globe size={24} />
+              </div>
+              <h3 className="text-2xl font-bold mb-2">11 Districts</h3>
+              <p className="text-white/70">தமிழகத்தில் உள்ள 11 மாவட்டங்களில் பணி</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/10">
+              <div className="bg-yellow-400 text-blue-900 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
+                <Navigation size={24} />
+              </div>
+              <h3 className="text-2xl font-bold mb-2">575 Villages</h3>
+              <p className="text-white/70">கிராமங்களில் கோடைகால VBS ஊழியங்கள்</p>
+            </div>
+          </div>
+
           <div 
-            className="flex gap-4 overflow-x-auto pb-10 scrollbar-hide snap-x"
+            ref={scrollContainerRef}
+            className="flex gap-6 overflow-x-auto pb-10 scrollbar-hide snap-x"
           >
             {[1, 2, 3, 4, 5].map((i) => (
               <img 
                 key={i} 
                 src={`/images/photo${i}.png`} 
                 alt={`VBS Photo ${i}`} 
-                className="w-[85vw] sm:w-[450px] aspect-[4/3] object-cover flex-shrink-0 snap-center border border-editorial-text/10"
-                onError={(e) => (e.currentTarget.src = `https://placehold.co/800x600?text=VBS+Exhibit+${i}`)}
+                className="w-80 h-56 object-cover rounded-2xl flex-shrink-0 snap-center shadow-2xl border-4 border-white/10"
+                onError={(e) => (e.currentTarget.src = `https://placehold.co/400x300?text=VBS+Photo+${i}`)}
               />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Villages Tracker Component */}
-      <VillageTracker />
+      {/* Tracker Component */}
+      <MissionTracker />
 
       {/* Get Involved Section */}
-      <section id="involve" className="py-32 bg-editorial-bg">
+      <section id="involve" className="py-24 bg-white">
         <div className="container mx-auto px-6">
-          <SectionHeader title="Get Involved" subtitle="Participation in the Divine Calling" />
+          <SectionHeader title="Get Involved" subtitle="இந்த ஊழியத்தில் நீங்களும் இணைந்து செயல்படலாம்" />
           
-          <div className="max-w-4xl mx-auto flex flex-col md:flex-row border border-editorial-text/10">
-            <div className="md:w-1/3 flex flex-row overflow-x-auto md:flex-col border-b md:border-b-0 md:border-r border-editorial-text/10 bg-editorial-panel/30">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex bg-gray-100 p-1.5 rounded-2xl mb-8">
               <button 
                 onClick={() => setActiveTab('pray')}
-                className={`flex-1 min-w-[120px] p-6 md:p-8 text-center md:text-left text-[10px] uppercase font-bold tracking-widest border-r md:border-r-0 md:border-b border-editorial-text/10 transition-all ${activeTab === 'pray' ? 'bg-editorial-text text-white' : 'hover:bg-editorial-panel'}`}
+                className={`flex-1 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${activeTab === 'pray' ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-500 hover:text-gray-700'}`}
               >
-                01. Pray <br className="md:hidden"/>(ஜெபிக்க)
+                <HandHelping size={20} /> Pray (ஜெபிக்க)
               </button>
               <button 
                 onClick={() => setActiveTab('volunteer')}
-                className={`flex-1 min-w-[120px] p-6 md:p-8 text-center md:text-left text-[10px] uppercase font-bold tracking-widest border-r md:border-r-0 md:border-b border-editorial-text/10 transition-all ${activeTab === 'volunteer' ? 'bg-editorial-text text-white' : 'hover:bg-editorial-panel'}`}
+                className={`flex-1 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${activeTab === 'volunteer' ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-500 hover:text-gray-700'}`}
               >
-                02. Volunteer <br className="md:hidden"/>(தன்னார்வலராக)
+                <Users size={20} /> Volunteer (தன்னார்வலராக)
               </button>
               <button 
                 onClick={() => setActiveTab('support')}
-                className={`flex-1 min-w-[120px] p-6 md:p-8 text-center md:text-left text-[10px] uppercase font-bold tracking-widest transition-all ${activeTab === 'support' ? 'bg-editorial-text text-white' : 'hover:bg-editorial-panel'}`}
+                className={`flex-1 py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${activeTab === 'support' ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-500 hover:text-gray-700'}`}
               >
-                03. Support <br className="md:hidden"/>(தாங்க)
+                <Heart size={20} /> Support (தாங்க)
               </button>
             </div>
 
-            <div className="md:w-2/3 p-12">
+            <div className="bg-white border border-gray-100 rounded-3xl p-8 shadow-sm">
               <AnimatePresence mode="wait">
                 {activeTab === 'pray' && (
                   <motion.div 
                     key="pray"
-                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                    className="space-y-6"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="grid gap-4"
                   >
-                    <h3 className="text-3xl font-serif font-black italic mb-8">Prayer Altars.</h3>
                     {[
                       "27,000 சிறுவர்களை மிஷனரிகள் மற்றும் தன்னார்வலர்கள் சந்திக்க ஜெபியுங்கள்.",
                       "தமிழகத்தின் 11 மாவட்டங்களில் 575 VBS-களை வெற்றிகரமாக நடத்த ஜெபியுங்கள்.",
                       "நடைபெற்று வருகிற VBS களுக்காக தேவனை துதியுங்கள்.",
+                      "ஒரு கிராம VBSஐ ரூ 5,000 கொடுத்து தாங்குவார் 575 VBSகளுக்கு எழும்ப ஜெபியுங்கள்.",
+                      "VBS நடத்துகிற ஊழியர்கள் வெயிலின் தாக்கத்தினால் பாதிக்கப்படாமல் இருக்க ஜெபியுங்கள்.",
                       "ஊழியர்கள் பிரயாணம் செய்யும் வாகனங்கள் பாதுகாப்பிற்காக ஜெபியுங்கள்."
                     ].map((point, idx) => (
-                      <div key={idx} className="flex gap-4 items-start border-b border-editorial-text/5 pb-4">
-                        <span className="text-[10px] font-mono opacity-30 mt-1">{idx + 1}</span>
-                        <p className="text-sm font-medium tracking-tight">{point}</p>
+                      <div key={idx} className="flex gap-4 items-start bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                        <div className="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center font-bold">{idx + 1}</div>
+                        <p className="text-gray-700 font-medium">{point}</p>
                       </div>
                     ))}
+                    <div className="mt-8 text-center">
+                      <a href="https://wa.me/919443289026?text=Praying for MECOGEN" className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-8 py-4 rounded-full font-bold hover:bg-blue-200 transition-all">
+                        <MessageSquare size={20} /> எங்களோடு இணைந்து ஜெபிக்க
+                      </a>
+                    </div>
                   </motion.div>
                 )}
 
                 {activeTab === 'volunteer' && (
                   <motion.div 
                     key="volunteer"
-                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                    className="flex flex-col h-full justify-center"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="text-center py-12"
                   >
-                    <h3 className="text-3xl font-serif font-black italic mb-6">Service.</h3>
-                    <p className="text-lg font-serif italic mb-10 opacity-80 leading-relaxed">
+                    <div className="bg-yellow-100 text-yellow-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-8">
+                      <Users size={40} />
+                    </div>
+                    <h3 className="text-3xl font-black text-gray-900 mb-4">Join as a Volunteer</h3>
+                    <p className="text-lg text-gray-600 mb-10 max-w-lg mx-auto leading-relaxed">
                       ஆலயம் இல்லா கிராமங்களில் VBS வகுப்புகளை நடத்துவதற்கு ஆத்தும பாரம் உள்ள தன்னார்வ ஊழியர்களை நாங்கள் வரவேற்கிறோம்.
                     </p>
-                    <a href="https://docs.google.com/forms/d/your-id" target="_blank" className="inline-block border-2 border-editorial-text px-10 py-4 font-bold text-xs uppercase tracking-widest hover:bg-editorial-text hover:text-white transition-all w-fit">
-                      Apply to Volunteer
+                    <a href="https://docs.google.com/forms/d/your-id" target="_blank" className="bg-blue-600 text-white px-10 py-5 rounded-full font-black text-lg hover:bg-blue-700 shadow-xl inline-block">
+                      Join the Mission
                     </a>
                   </motion.div>
                 )}
@@ -394,28 +449,25 @@ export default function App() {
                 {activeTab === 'support' && (
                   <motion.div 
                     key="support"
-                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                    className="flex flex-col h-full justify-center"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="text-center py-12"
                   >
-                    <h3 className="text-3xl font-serif font-black italic mb-10">Stewardship.</h3>
-                    <div className="grid grid-cols-1 gap-4 mb-10">
-                      <div className="border border-editorial-text/10 p-6 flex justify-between items-center group hover:border-editorial-accent transition-colors">
-                        <div>
-                          <p className="text-[9px] uppercase font-bold tracking-widest opacity-40 mb-1">Impact Level: Primary</p>
-                          <h4 className="text-xl font-bold font-serif italic">1 Child / ஒரு குட்டி</h4>
-                        </div>
-                        <span className="text-2xl font-black text-editorial-accent">₹ 100</span>
+                    <div className="grid md:grid-cols-2 gap-6 mb-12">
+                      <div className="bg-green-50 border border-green-100 p-8 rounded-3xl">
+                        <p className="text-gray-600 mb-1">ഒരു ഗ്രാമം / 1 Village</p>
+                        <h4 className="text-3xl font-black text-green-700">₹ 5,000</h4>
+                        <p className="text-sm text-green-600 mt-2 font-medium">(6 Days VBS Expenses)</p>
                       </div>
-                      <div className="border border-editorial-text/10 p-6 flex justify-between items-center group hover:border-editorial-accent transition-colors">
-                        <div>
-                          <p className="text-[9px] uppercase font-bold tracking-widest opacity-40 mb-1">Impact Level: Community</p>
-                          <h4 className="text-xl font-bold font-serif italic">1 Village / ஒரு கிராமம்</h4>
-                        </div>
-                        <span className="text-2xl font-black text-editorial-accent">₹ 5,000</span>
+                      <div className="bg-blue-50 border border-blue-100 p-8 rounded-3xl">
+                        <p className="text-gray-600 mb-1">ഒരു കുട്ടി / 1 Child</p>
+                        <h4 className="text-3xl font-black text-blue-700">₹ 100</h4>
+                        <p className="text-sm text-blue-600 mt-2 font-medium">(Study Kits & Materials)</p>
                       </div>
                     </div>
-                    <a href="#donate" className="inline-block bg-editorial-text text-white px-10 py-5 font-bold text-xs uppercase tracking-widest hover:bg-neutral-800 transition-all w-fit shadow-xl">
-                      Proceed to Support
+                    <a href="#donate" className="bg-blue-600 text-white px-10 py-5 rounded-full font-black text-lg hover:bg-blue-700 shadow-xl inline-block">
+                      Make a Donation
                     </a>
                   </motion.div>
                 )}
@@ -426,151 +478,132 @@ export default function App() {
       </section>
 
       {/* Donation Form */}
-      <section id="donate" className="py-32 bg-editorial-panel">
+      <section id="donate" className="py-24 bg-gray-50">
         <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto grid md:grid-cols-2 bg-editorial-bg border border-editorial-text/10 overflow-hidden shadow-2xl">
-            <div className="p-12 border-r border-editorial-text/10">
-              <h3 className="text-4xl font-serif font-black italic mb-4 leading-none">Support the <span className="text-editorial-accent">Mission.</span></h3>
-              <p className="text-[10px] uppercase font-bold tracking-[0.3em] opacity-40 mb-12">Donation Registry</p>
-              
-              <form onSubmit={handleDonation} className="space-y-8">
-                <div className="space-y-4 mb-4">
-                  <label className="text-[9px] uppercase font-bold tracking-widest opacity-60">Donation Purpose</label>
-                  <div className="grid grid-cols-2 gap-4">
-                    <label className={`block border p-4 cursor-pointer transition-colors ${formData.amount === '100' ? 'border-editorial-accent bg-editorial-accent/10' : 'border-editorial-text/20 hover:border-editorial-accent/50'}`}>
-                      <input type="radio" name="amount" value="100" checked={formData.amount === '100'} onChange={(e) => setFormData({...formData, amount: e.target.value})} className="hidden" />
-                      <div className="text-[9px] uppercase tracking-widest opacity-50 mb-1">1 Child / ஒரு குட்டி</div>
-                      <div className="text-xl font-serif font-black italic text-editorial-accent">₹ 100</div>
-                    </label>
-                    <label className={`block border p-4 cursor-pointer transition-colors ${formData.amount === '5000' ? 'border-editorial-accent bg-editorial-accent/10' : 'border-editorial-text/20 hover:border-editorial-accent/50'}`}>
-                      <input type="radio" name="amount" value="5000" checked={formData.amount === '5000'} onChange={(e) => setFormData({...formData, amount: e.target.value})} className="hidden" />
-                      <div className="text-[9px] uppercase tracking-widest opacity-50 mb-1">1 Village / ஒரு கிராமம்</div>
-                      <div className="text-xl font-serif font-black italic text-editorial-accent">₹ 5,000</div>
-                    </label>
-                  </div>
-                  <div className="pt-2">
-                    <label className="text-[9px] uppercase font-bold tracking-widest opacity-60 block mb-2">Or enter any custom amount</label>
-                    <div className="flex items-center gap-2 border-b border-editorial-text/20 pb-2 focus-within:border-editorial-accent transition-colors">
-                      <span className="font-serif italic text-lg opacity-60">₹</span>
-                      <input 
-                        type="number" 
-                        value={formData.amount}
-                        onChange={(e) => setFormData({...formData, amount: e.target.value})}
-                        className="w-full bg-transparent outline-none font-serif text-lg italic transition-colors"
-                        placeholder="Enter amount"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-1 mt-8">
-                  <label className="text-[9px] uppercase font-bold tracking-widest opacity-60">Full Name</label>
+          <SectionHeader title="Support the Mission" subtitle="உங்கள் காணிக்கை ஒரு தலைமுறையை மாற்றும்" />
+          
+          <div className="max-w-2xl mx-auto bg-white rounded-3xl p-8 md:p-12 shadow-2xl border border-gray-100">
+             <form onSubmit={handleDonation} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">பெயர் (Full Name)</label>
                   <input 
                     type="text" 
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value.replace(/[0-9]/g, '')})}
-                    className="w-full bg-transparent border-b border-editorial-text/20 py-2 focus:border-editorial-accent outline-none font-serif text-lg italic transition-colors"
+                    placeholder="Enter your name" 
+                    className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all outline-none"
                     required
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[9px] uppercase font-bold tracking-widest opacity-60">Mobile Contact</label>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">மொபைல் (Mobile)</label>
                   <input 
                     type="tel" 
                     value={formData.mobile}
                     onChange={(e) => setFormData({...formData, mobile: e.target.value})}
-                    className="w-full bg-transparent border-b border-editorial-text/20 py-2 focus:border-editorial-accent outline-none font-serif text-lg italic transition-colors"
+                    placeholder="10 digit mobile number" 
                     maxLength={10}
+                    className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all outline-none"
                     required
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[9px] uppercase font-bold tracking-widest opacity-60">Place of Birth/Residence</label>
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">ஊர் (Place)</label>
                   <input 
                     type="text" 
                     value={formData.place}
                     onChange={(e) => setFormData({...formData, place: e.target.value})}
-                    className="w-full bg-transparent border-b border-editorial-text/20 py-2 focus:border-editorial-accent outline-none font-serif text-lg italic transition-colors"
+                    placeholder="City or Village" 
+                    className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 transition-all outline-none"
                     required
                   />
                 </div>
-                <button 
-                  type="submit" 
-                  disabled={isSubmitting}
-                  className="w-full bg-editorial-text text-white py-5 font-bold text-xs uppercase tracking-widest hover:bg-neutral-800 transition-all flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? 'Submitting...' : 'Next Step →'}
+                <button type="submit" className="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-xl hover:bg-blue-700 shadow-xl transition-all flex items-center justify-center gap-3">
+                  <DollarSign size={24} /> Continue to Support
                 </button>
-              </form>
-            </div>
+             </form>
 
-            <div className="bg-editorial-panel/50 flex items-center justify-center p-12">
-              <AnimatePresence mode="wait">
-                {!showQR ? (
-                  <motion.div 
-                    key="intro" 
-                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                    className="text-center italic font-serif opacity-40 text-sm"
+             {showQR && (
+               <motion.div 
+                 initial={{ opacity: 0, y: 20 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 className="mt-12 text-center p-8 border-t border-gray-100"
+               >
+                  <h4 className="text-xl font-bold mb-6 text-gray-800">Scan QR to pay via UPI</h4>
+                  <div className="inline-block p-4 bg-white border-2 border-gray-100 rounded-3xl shadow-inner mb-6">
+                    <img 
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent('upi://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR')}`}
+                      alt="Payment QR"
+                      className="w-64 h-64 mx-auto"
+                    />
+                  </div>
+                  <p className="text-gray-500 mb-8 font-medium">Any UPI App supported (GPay, PhonePe, etc.)</p>
+                  <button 
+                    onClick={sendWhatsApp}
+                    className="w-full bg-green-500 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-green-600 transition-all shadow-lg"
                   >
-                    Please complete the form to generate your specialized UPI gateway.
-                  </motion.div>
-                ) : (
-                  <motion.div 
-                    key="qr"
-                    initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-                    className="text-center w-full"
-                  >
-                    <div className="bg-white p-4 inline-block mb-6 shadow-xl border border-editorial-text/5">
-                       <img 
-                          src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(`upi://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR&am=${formData.amount}`)}`}
-                          alt="Payment QR"
-                          className="w-48 h-48"
-                        />
-                    </div>
-                    <p className="hidden md:block text-[9px] uppercase font-bold tracking-widest opacity-60 mb-8 max-w-xs mx-auto">Scan with GPay, PhonePe, or any UPI terminal to pay ₹{formData.amount}</p>
-                    <p className="md:hidden text-[9px] uppercase font-bold tracking-widest opacity-60 mb-4 max-w-xs mx-auto">Pay ₹{formData.amount} using any UPI App</p>
-                    <a 
-                      href={/android/i.test(navigator.userAgent) ? `intent://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR&am=${formData.amount}#Intent;scheme=upi;end;` : `upi://pay?pa=graceministriesindia@okhdfcbank&pn=MECOGEN%20VBS&cu=INR&am=${formData.amount}`} 
-                      className="md:hidden inline-block bg-editorial-text text-white px-6 py-3 font-bold text-[10px] uppercase tracking-widest hover:bg-neutral-800 transition-all mb-8 shadow-md"
-                    >
-                      Open UPI App
-                    </a>
-                    <br className="md:hidden" />
-                    <button 
-                      onClick={sendWhatsApp}
-                      className="inline-block border-b-2 border-editorial-text font-black text-xs uppercase tracking-[0.2em] pb-1 hover:text-editorial-accent hover:border-editorial-accent transition-all"
-                    >
-                      Confirm via WhatsApp
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+                    Confirm via WhatsApp 📱
+                  </button>
+               </motion.div>
+             )}
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer id="contact" className="py-12 bg-editorial-bg border-t border-editorial-text/10">
-        <div className="container mx-auto px-6 overflow-hidden">
-           <div className="flex flex-col md:flex-row justify-between items-end gap-12 text-[10px] font-bold uppercase tracking-[0.3em] opacity-50 pb-8 border-b border-editorial-text/5">
-              <div className="space-y-1">
-                <p>Tuticorin, Tamil Nadu</p>
-                <p>628101, India</p>
+      <footer id="contact" className="bg-gray-900 text-white py-24">
+        <div className="container mx-auto px-6">
+           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+              <div className="space-y-6">
+                <div className="flex items-center gap-3">
+                  <div className="bg-blue-600 p-2 rounded-xl">
+                    <QrCode size={24} />
+                  </div>
+                  <span className="font-black text-2xl tracking-tighter uppercase">MECOGEN</span>
+                </div>
+                <p className="text-gray-400 leading-relaxed font-medium">
+                  Transforming the next generation through prayer, mission, and dedication in the remote villages of India.
+                </p>
               </div>
-              <div className="text-center">
-                <p>© 2026 Grace Ministries India</p>
+              
+              <div>
+                <h5 className="text-lg font-bold mb-8 text-blue-400">Quick Links</h5>
+                <ul className="space-y-4 text-gray-400 font-medium">
+                  <li><a href="#about" className="hover:text-white transition-colors">About Story</a></li>
+                  <li><a href="#vision" className="hover:text-white transition-colors">Goal 2026</a></li>
+                  <li><a href="#mission" className="hover:text-white transition-colors">Mission Tracker</a></li>
+                  <li><a href="#donate" className="hover:text-white transition-colors">Support Center</a></li>
+                </ul>
               </div>
-              <div className="text-right space-y-1">
-                <p>MECOGEN VBS 2026</p>
-                <p>Meeting Coming Generation</p>
+
+              <div>
+                <h5 className="text-lg font-bold mb-8 text-blue-400">Contact Us</h5>
+                <ul className="space-y-4 text-gray-400 font-medium">
+                  <li className="flex items-center gap-3"><Phone size={18} className="text-blue-500" /> +91 9443289026</li>
+                  <li className="flex items-center gap-3"><Mail size={18} className="text-blue-500" /> info@mecogen.org</li>
+                  <li className="flex items-start gap-3">
+                    <MapPin size={18} className="text-blue-500 mt-1" />
+                    <span>Grace Ministries, Abraham Nagar,<br/> Tuticorin 628101, TN</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h5 className="text-lg font-bold mb-8 text-blue-400">Get Involved</h5>
+                <ul className="space-y-4 text-gray-400 font-medium">
+                  <li><a href="#involve" className="hover:text-white transition-colors">Join as Volunteer</a></li>
+                  <li><a href="#involve" className="hover:text-white transition-colors">Prayer Warriors</a></li>
+                  <li><a href="#donate" className="hover:text-white transition-colors">Sponsor a Village VBS</a></li>
+                </ul>
               </div>
            </div>
            
-           <div className="flex justify-center mt-12 mb-8">
-              <span className="text-[120px] md:text-[200px] leading-none font-serif font-black italic opacity-[0.03] pointer-events-none select-none">
-                MECOGEN
-              </span>
+           <div className="pt-12 border-t border-gray-800 text-center text-gray-500 font-medium flex flex-col md:flex-row justify-between items-center gap-6">
+              <p>© 2026 MECOGEN VBS - Project of Grace Ministries</p>
+              <div className="flex gap-8">
+                <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+                <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+              </div>
            </div>
         </div>
       </footer>
