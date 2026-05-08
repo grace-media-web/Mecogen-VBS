@@ -439,11 +439,11 @@ export default function App() {
                     className="grid gap-4"
                   >
                     {[
-                      "27,000 சிறுவர்களை மிஷனரிகள் மற்றும் தன்னார்வலர்கள் சந்திக்க ஜெபியுங்கள்.",
-                      "தமிழகத்தின் 11 மாவட்டங்களில் 575 VBS-களை வெற்றிகரமாக நடத்த ஜெபியுங்கள்.",
+                      "27,000 சிறுவர்களை மிஷனரிகள் மற்றும் தன்னார்வ ஊழியர்கள் சந்திக்க ஜெபியுங்கள்.",
+                      "தமிழகத்தின் 11 மாவட்டங்களில் 575 VBS-களை வதடையில்லாமல் நடத்த ஜெபியுங்கள்.",
                       "நடைபெற்று வருகிற VBS களுக்காக தேவனை துதியுங்கள்.",
-                      "ஒரு கிராம VBSஐ ரூ 5,000 கொடுத்து தாங்குவார் 575 VBSகளுக்கு எழும்ப ஜெபியுங்கள்.",
-                      "VBS நடத்துகிற ஊழியர்கள் வெயிலின் தாக்கத்தினால் பாதிக்கப்படாமல் இருக்க ஜெபியுங்கள்.",
+                      "ஒரு கிராம VBSஐ ரூ 5,000 கொடுத்து தாங்கும் ஆத்தும பாரம் உள்ள பங்காளர்கள் எழும்ப ஜெபியுங்கள்.",
+                      "VBS நடத்துகிற ஊழியர்கள் மற்றும் தன்னார்வ ஊழியர்கள் வெயிலின் தாக்கத்தினால் பாதிக்கப்படாமல் இருக்க ஜெபியுங்கள்.",
                       "ஊழியர்கள் பிரயாணம் செய்யும் வாகனங்கள் பாதுகாப்பிற்காக ஜெபியுங்கள்."
                     ].map((point, idx) => (
                       <div key={idx} className="flex gap-4 items-start bg-gray-50 p-5 rounded-2xl border border-gray-100">
@@ -472,7 +472,9 @@ export default function App() {
                     </div>
                     <h3 className="text-3xl font-black text-gray-900 mb-4">Join as a Volunteer</h3>
                     <p className="text-lg text-gray-600 mb-10 max-w-lg mx-auto leading-relaxed">
-                      ஆலயம் இல்லா கிராமங்களில் VBS வகுப்புகளை நடத்துவதற்கு ஆத்தும பாரம் உள்ள தன்னார்வ ஊழியர்களை நாங்கள் வரவேற்கிறோம்.
+                      ஆலயம் இல்லா கிராமங்களில் VBS வகுப்புகளை நடத்துவதற்கு ஆத்தும பாரம் உள்ள தன்னார்வ ஊழியர்களை நாங்கள் வரவேற்கிறோம்</p>
+
+நீங்களும் இந்த விடுமுறை நாட்களில் எங்களோடு VBS பணிகளில் இணைந்து தேவனுடைய ராஜ்யத்தை கட்டலாம்!
                     </p>
                     <a href="https://docs.google.com/forms/d/your-id" target="_blank" className="bg-blue-600 text-white px-10 py-5 rounded-full font-black text-lg hover:bg-blue-700 shadow-xl inline-block">
                       Join the Mission
@@ -490,12 +492,12 @@ export default function App() {
                   >
                     <div className="grid md:grid-cols-2 gap-6 mb-12">
                       <div className="bg-green-50 border border-green-100 p-8 rounded-3xl">
-                        <p className="text-gray-600 mb-1">ഒരു ഗ്രാമം / 1 Village</p>
+                        <p className="text-gray-600 mb-1">ஒரு கிராமம்ം / 1 Village</p>
                         <h4 className="text-3xl font-black text-green-700">₹ 5,000</h4>
                         <p className="text-sm text-green-600 mt-2 font-medium">(6 Days VBS Expenses)</p>
                       </div>
                       <div className="bg-blue-50 border border-blue-100 p-8 rounded-3xl">
-                        <p className="text-gray-600 mb-1">ഒരു കുട്ടി / 1 Child</p>
+                        <p className="text-gray-600 mb-1">ஒரு பிள்ளைടി / 1 Child</p>
                         <h4 className="text-3xl font-black text-blue-700">₹ 100</h4>
                         <p className="text-sm text-blue-600 mt-2 font-medium">(Study Kits & Materials)</p>
                       </div>
@@ -531,7 +533,7 @@ export default function App() {
                         onClick={() => handleAmountSelect('child')}
                         className={`p-4 md:p-6 text-left border-2 rounded-2xl transition-all ${donationType === 'child' ? 'border-yellow-400 bg-yellow-50/50 shadow-md' : 'border-gray-100 hover:border-gray-200 bg-white'}`}
                       >
-                        <p className="text-gray-500 text-xs font-bold uppercase tracking-wide mb-2">1 Child / ஒரு குட்டி</p>
+                        <p className="text-gray-500 text-xs font-bold uppercase tracking-wide mb-2">1 Child / ஒரு பிள்ளைி</p>
                         <h4 className="text-2xl md:text-3xl font-black text-yellow-500">₹ 100</h4>
                       </button>
                       <button 
@@ -582,7 +584,7 @@ export default function App() {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">Place of Birth/Residence</label>
+                      <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wide">Place of Residence</label>
                       <input 
                         type="text" 
                         value={formData.place}
