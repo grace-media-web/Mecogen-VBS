@@ -43,7 +43,7 @@ export const VBS_DATA: Region[] = [
         ]
       },
       {
-        name: "புல்லகவுண்ைன்பட்டி (Pullagoundanpatti)",
+        name: "புல்லகவுண்டன்பட்டி (Pullagoundanpatti)",
         villages: [
           { name: "தகாம்மங்கியாபுரம்", status: 'held' }
         ]
