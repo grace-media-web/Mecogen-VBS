@@ -359,21 +359,21 @@ export default function App() {
                 <Users size={24} />
               </div>
               <h3 className="text-2xl font-bold mb-2">27,000+</h3>
-              <p className="text-white/70">சிறுவர்களை சந்திப்பதே எங்களது நோக்கம்</p>
+              <p className="text-white/70">வளர்  தலைமுறையை இயேசுவுக்காய் ஆயத்தப்படுத்துவது எங்கள் நஎங்களின் பிரதான நோக்கம்</p>
             </div>
             <div className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/10">
               <div className="bg-yellow-400 text-blue-900 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
                 <Globe size={24} />
               </div>
               <h3 className="text-2xl font-bold mb-2">11 Districts</h3>
-              <p className="text-white/70">தமிழகத்தில் உள்ள 11 மாவட்டங்களில் பணி</p>
+              <p className="text-white/70">தமிழகத்தில் உள்ள 11 மாவட்டங்களில்</p>
             </div>
             <div className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/10">
               <div className="bg-yellow-400 text-blue-900 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
                 <Navigation size={24} />
               </div>
               <h3 className="text-2xl font-bold mb-2">575 Villages</h3>
-              <p className="text-white/70">கிராமங்களில் கோடைகால VBS ஊழியங்கள்</p>
+              <p className="text-white/70">ஆலயம் இல்லா கிராமங்களில் கோடைகால VBS ஊழியங்கள்</p>
             </div>
           </div>
 
