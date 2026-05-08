@@ -52,7 +52,7 @@ export const VBS_DATA: Region[] = [
   },
   {
     id: 2,
-    name: "யாக்தகாபு பிராந்தியம் (James Region)",
+    name: "யாக்கோபு பிராந்தியம் (James Region)",
     fields: [
       {
         name: "அழகப்பபுரம் (Alagappapuram)",
