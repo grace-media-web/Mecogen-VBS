@@ -17,7 +17,7 @@ To save form submissions directly to a free Google Sheet without any backend ser
 2. Delete any existing code and paste the following script:
 
 ```javascript
-const SHEET_NAME = "Sheet1"; // Change if your sheet name is different
+const SHEET_NAME = "2026"; // Change if your sheet name is different
 
 function doPost(e) {
   try {
