@@ -35,10 +35,10 @@ export const VBS_DATA: Region[] = [
         ]
       },
       {
-        name: "பண்டுேன்பட்டி (Panduthenpatti)",
+        name: "பண்டுதன்பட்டி (Panduthenpatti)",
         villages: [
           { name: "ஆலத்தூர்", status: 'held' },
-          { name: "அப்ப நாயக்கன் பட்டி", status: 'upcoming' },
+          { name: "அப்பநாயக்கன்பட்டி", status: 'upcoming' },
           { name: "பாப்பநாயக்கன்பட்டி", status: 'upcoming' }
         ]
       },
@@ -83,7 +83,7 @@ export const VBS_DATA: Region[] = [
         ]
       },
       {
-        name: "ஏழாயிரம் பண்டை (Ezhavayiram Pannai)",
+        name: "ஏழாயிரம்பண்ணை (Ezhavayiram Pannai)",
         villages: [
           { name: "அப்பணம்பட்டி", status: 'held' },
           { name: "சிவசங்குபட்டி", status: 'held' },
