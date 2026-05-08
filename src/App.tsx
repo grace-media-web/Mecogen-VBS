@@ -472,10 +472,10 @@ export default function App() {
                     </div>
                     <h3 className="text-3xl font-black text-gray-900 mb-4">Join as a Volunteer</h3>
                     <p className="text-lg text-gray-600 mb-10 max-w-lg mx-auto leading-relaxed">
-                      ஆலயம் இல்லா கிராமங்களில் VBS வகுப்புகளை நடத்துவதற்கு ஆத்தும பாரம் உள்ள தன்னார்வ ஊழியர்களை நாங்கள் வரவேற்கிறோம்</p>
-
-நீங்களும் இந்த விடுமுறை நாட்களில் எங்களோடு VBS பணிகளில் இணைந்து தேவனுடைய ராஜ்யத்தை கட்டலாம்!
-                    </p>
+                      ஆலயம் இல்லா கிராமங்களில் VBS வகுப்புகளை நடத்துவதற்கு ஆத்தும பாரம் உள்ள தன்னார்வ ஊழியர்களை நாங்கள் வரவேற்கிறோம்
+                      </p>
+                      <p>
+                      நீங்களும் இந்த விடுமுறை நாட்களில் எங்களோடு VBS பணிகளில் இணைந்து தேவனுடைய ராஜ்யத்தை கட்டலாம்!</p>
                     <a href="https://docs.google.com/forms/d/your-id" target="_blank" className="bg-blue-600 text-white px-10 py-5 rounded-full font-black text-lg hover:bg-blue-700 shadow-xl inline-block">
                       Join the Mission
                     </a>
