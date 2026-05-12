@@ -476,6 +476,8 @@ export default function App() {
                       </p>
                       நீங்களும் இந்த விடுமுறை நாட்களில் எங்களோடு VBS பணிகளில் இணைந்து தேவனுடைய ராஜ்யத்தை கட்டலாம்!
                       </p>
+                       </p> 
+                        </p>
                     <a href="https://docs.google.com/forms/d/your-id" target="_blank" className="bg-blue-600 text-white px-10 py-5 rounded-full font-black text-lg hover:bg-blue-700 shadow-xl inline-block">
                       Join the Mission
                     </a>
