@@ -499,7 +499,7 @@ export default function App() {
                         <p className="text-sm text-green-600 mt-2 font-medium">(6 Days VBS Expenses)</p>
                       </div>
                       <div className="bg-blue-50 border border-blue-100 p-8 rounded-3xl">
-                        <p className="text-gray-600 mb-1">ஒரு பிள்ளையை தாங்க / 1 Child</p>
+                        <p className="text-gray-600 mb-1">ஒரு பிள்ளையை சந்திக்க / 1 Child</p>
                         <h4 className="text-3xl font-black text-blue-700">₹ 100</h4>
                         <p className="text-sm text-blue-600 mt-2 font-medium">(Study Kits & Materials)</p>
                       </div>
