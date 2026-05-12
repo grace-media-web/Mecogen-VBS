@@ -535,7 +535,7 @@ export default function App() {
                         onClick={() => handleAmountSelect('child')}
                         className={`p-4 md:p-6 text-left border-2 rounded-2xl transition-all ${donationType === 'child' ? 'border-yellow-400 bg-yellow-50/50 shadow-md' : 'border-gray-100 hover:border-gray-200 bg-white'}`}
                       >
-                        <p className="text-gray-500 text-xs font-bold uppercase tracking-wide mb-2">1 Child / ஒரு பிள்ளைி</p>
+                        <p className="text-gray-500 text-xs font-bold uppercase tracking-wide mb-2">1 Child / ஒரு பிள்ளையை சந்திக்க </p>
                         <h4 className="text-2xl md:text-3xl font-black text-yellow-500">₹ 100</h4>
                       </button>
                       <button 
@@ -543,7 +543,7 @@ export default function App() {
                         onClick={() => handleAmountSelect('village')}
                         className={`p-4 md:p-6 text-left border-2 rounded-2xl transition-all ${donationType === 'village' ? 'border-yellow-400 bg-yellow-50/50 shadow-md' : 'border-gray-100 hover:border-gray-200 bg-white'}`}
                       >
-                        <p className="text-gray-500 text-xs font-bold uppercase tracking-wide mb-2">1 Village / ஒரு கிராமம்</p>
+                        <p className="text-gray-500 text-xs font-bold uppercase tracking-wide mb-2">1 Village / ஒரு கிராமத்திற்கு</p>
                         <h4 className="text-2xl md:text-3xl font-black text-yellow-500">₹ 5,000</h4>
                       </button>
                     </div>
