@@ -103,7 +103,7 @@ const MissionTracker = () => {
         <SectionHeader 
           light
           title="Reached Goal" 
-          subtitle="நடைபெற்ற முடிந்த VBS எண்ணிக்கை"
+          subtitle="நடைபெற்று முடிந்த VBS எண்ணிக்க"
         />
         
         <div className="max-w-4xl mx-auto space-y-8 mb-20 bg-gray-800 p-8 md:p-12 rounded-3xl border border-gray-700 shadow-2xl">
