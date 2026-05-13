@@ -141,7 +141,7 @@ const MissionTracker = () => {
 
            <div className="space-y-3">
              <div className="flex justify-between text-sm md:text-base font-bold text-gray-200 mb-1">
-               <span className="flex items-center gap-2"><Heart size={18} className="text-yellow-400"/> VBS Completed</span>
+               <span className="flex items-center gap-2"><Heart size={18} className="text-yellow-400"/> நடைபெற்று முடிந்த VBS எண்ணிக்கை</span>
                <span>{currentVBS.toLocaleString()} / {vbsGoal.toLocaleString()}</span>
              </div>
              <div className="w-full bg-gray-900 h-4 rounded-full overflow-hidden border border-gray-700">
