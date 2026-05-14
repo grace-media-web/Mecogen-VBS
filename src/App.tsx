@@ -324,7 +324,7 @@ export default function App() {
         <div className="container mx-auto px-6">
           <SectionHeader 
             title="About MECOGEN" 
-            subtitle="மீக்கோஜன் - எதிர்காலத் தலைமுறையை சந்திப்போம்"
+            subtitle="MECOGEN - எதிர்காலத் தலைமுறையை சந்திப்போம்"
           />
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
@@ -351,7 +351,7 @@ export default function App() {
       {/* Vision Section */}
       <section id="vision" className="py-24 bg-blue-900 text-white overflow-hidden">
         <div className="container mx-auto px-6">
-          <SectionHeader light title="Our Vision" subtitle="நமது இலக்கு மற்றும் தரிசனம்" />
+          <SectionHeader light title="Our Vision for 2026" subtitle="2026ல் நமது இலக்கு மற்றும் தரிசனம்" />
           
           <div className="grid md:grid-cols-3 gap-8 mb-16">
             <div className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/10">
